@@ -199,7 +199,7 @@ Após um longo processo de depuração, o Dockerfile abaixo foi finalizado. Ele 
 
 - Crie o arquivo Dockerfile no caminho 
 ```bash
-mkdir -p ~/docker/propel-env/
+mkdir -p ~/docker
 
 nano Dockerfile
 ```
