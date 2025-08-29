@@ -440,7 +440,7 @@ sudo docker cp /home/werlley/docker/Propel_2025.1_lin.run cdf23a8401bc:/home/wer
 Successfully copied 2.2GB to cdf23a8401bc:/home/tech03/propel_container
 ```
 
-- Apagar todos os conteiners e Volumes não usados
+### Apagar todos os conteiners e Volumes não usados
 
 ```bash
 docker system prune -a -f --volumes
