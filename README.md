@@ -377,7 +377,7 @@ O estado do contêiner, agora com o Propel instalado e configurado corretamente,
 docker commit propel-install-session propel-pronto
 ```
 
-### 4 Iniciar o Ambiente Propel
+## 4 Iniciar o Ambiente Propel
 
 O comando a seguir inicia o contêiner propel-pronto, compartilhando a interface gráfica, o hardware da placa de vídeo e apontando para os dois arquivos de licença.
 
@@ -401,12 +401,12 @@ cd /opt/lscc/propel/2025.1/
 ./launch_builder.sh
 ```
 
-## No seu $USER 
+### No seu $USER 
 
 ```bash
 cd ~
 ```
-## Cole dentro do bashrc
+### Cole dentro do bashrc
 
 ```bash
 alias propeldocker='docker run -it --rm \
