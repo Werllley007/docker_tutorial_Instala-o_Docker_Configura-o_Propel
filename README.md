@@ -471,6 +471,3 @@ docker load -i propel-pronto-backup.tar
 
 
 
-Agora você pode salvar esse conteúdo em um arquivo `.md` e usá-lo conforme necessário.
-
-# docker_tutorial_Instala-o_Docker_Configura-o_Propel
