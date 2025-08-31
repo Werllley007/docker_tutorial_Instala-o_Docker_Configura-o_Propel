@@ -199,7 +199,7 @@ Após um longo processo de depuração, o Dockerfile abaixo foi finalizado. Ele 
 
 - Crie o arquivo Dockerfile no caminho 
 ```bash
-mkdir -p ~/docker
+mkdir -p ~/docker/propel-env/
 
 nano Dockerfile
 ```
@@ -345,7 +345,7 @@ Tente os seguintes passos:
 #Saia do Conteiner
 exit
 
-$ xhost +local:docker 
+$ xhost + local:docker 
 
 non-network local connections being added to access control list
 ```
@@ -377,14 +377,20 @@ O estado do contêiner, agora com o Propel instalado e configurado corretamente,
 docker commit propel-install-session propel-pronto
 ```
 
-## 4 Iniciar o Ambiente Propel
+### 4 Iniciar o Ambiente Propel
 
 O comando a seguir inicia o contêiner propel-pronto, compartilhando a interface gráfica, o hardware da placa de vídeo e apontando para os dois arquivos de licença.
 
 ```bash
 docker run -it --rm \
     --name=propel-run \
+    --device=/dev/dri \
+    --shm-size=4g \
     -e DISPLAY=$DISPLAY \
+    -e QT_QPA_PLATFORM=xcb \
+    -e LIBGL_ALWAYS_SOFTWARE=1 \
+    -e QT_QUICK_BACKEND=software \
+    -e MESA_LOADER_DRIVER_OVERRIDE=llvmpipe \
     -v /tmp/.X11-unix:/tmp/.X11-unix \
     -v /home/werlley/docker/license.dat:/opt/lscc/propel/2025.1/builder/rtf/license/license.dat \
     --mac-address="02:42:ac:11:00:02" \
@@ -401,16 +407,44 @@ cd /opt/lscc/propel/2025.1/
 ./launch_builder.sh
 ```
 
-### No seu $USER 
+### Executar o Propel Builder em um passo
+
+```bash
+docker run --rm \
+--name=propel-run \
+--device=/dev/dri \
+--shm-size=4g \
+--security-opt seccomp=unconfined \
+-e DISPLAY=$DISPLAY \
+-e QT_QPA_PLATFORM=xcb \
+-e LIBGL_ALWAYS_SOFTWARE=1 \
+-e QT_QUICK_BACKEND=software \
+-e MESA_LOADER_DRIVER_OVERRIDE=llvmpipe \
+-e QTWEBENGINE_DISABLE_SANDBOX=1 \
+-v /tmp/.X11-unix:/tmp/.X11-unix:ro \
+-v /home/werlley/docker/license.dat:/opt/lscc/propel/2025.1/builder/rtf/license/license.dat \
+-v /home/werlley/docker/propel-projects:/home/werlley/docker/propel-projects \
+--mac-address="02:42:ac:11:00:02" \
+--workdir /opt/lscc/propel/2025.1/ \
+propel-pronto \
+/bin/bash -lc 'eval "$(dbus-launch)"; export DBUS_SESSION_BUS_ADDRESS; ./launch_builder.sh'
+```
+
+## No seu $USER 
 
 ```bash
 cd ~
+
+gedit .bashrc
 ```
-### Cole dentro do bashrc
+
+- cole dentro do bashrc
+## Cole dentro do bashrc
 
 ```bash
-alias propeldocker='docker run -it --rm \
+alias propeldocker='docker run --rm \
 					--name=propel-run \
+                    --device=/dev/dri \
 					-e DISPLAY=$DISPLAY \
 					-v /tmp/.X11-unix:/tmp/.X11-unix \
 					-v /home/werlley/docker/license.dat:/opt/lscc/propel/2025.1/builder/rtf/license/license.dat \
@@ -440,7 +474,7 @@ sudo docker cp /home/werlley/docker/Propel_2025.1_lin.run cdf23a8401bc:/home/wer
 Successfully copied 2.2GB to cdf23a8401bc:/home/tech03/propel_container
 ```
 
-### Apagar todos os conteiners e Volumes não usados
+- Apagar todos os conteiners e Volumes não usados
 
 ```bash
 docker system prune -a -f --volumes
